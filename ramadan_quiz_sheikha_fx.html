@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>تراثنا مع عشبة</title>
+<style>
+:root{--bg1:#0b2c63;--bg2:#071537;--gold:#f2c63c;--purple1:#6f6cff;--purple2:#b23eff;--green1:#16c292;--green2:#33d1c9;--text:#fff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;color:var(--text);background:
+radial-gradient(circle at 15% 15%, #1f4f88 0%, transparent 18%),
+radial-gradient(circle at 75% 85%, #2f1458 0%, transparent 18%),
+linear-gradient(90deg,var(--bg1),var(--bg2));min-height:100vh;overflow-x:hidden}
+.screen{min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px 16px 38px;position:relative}
+.screen.active{display:flex}
+.phone-wrap{width:min(100%,760px);margin:auto;text-align:center;position:relative}
+.title{font-size:clamp(34px,5vw,64px);font-weight:800;color:var(--gold);margin:8px 0 18px;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+.moon{font-size:88px;line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 10px rgba(255,206,64,.35));animation:floaty 4s ease-in-out infinite}
+.small-star{color:#ffd86f;font-size:24px;display:inline-block;transform:translateY(-4px);margin-left:6px;animation:twinkle 2.3s infinite ease-in-out}
+.card{width:min(100%,520px);margin:14px auto;background:linear-gradient(135deg, rgba(60,88,124,.9), rgba(45,63,98,.92));border:1px solid rgba(193,171,93,.35);border-radius:24px;padding:18px 22px;box-shadow:0 18px 35px rgba(0,0,0,.18)}
+.desc-title{color:#f2d178;font-size:20px;margin-bottom:8px;font-weight:700}
+.desc{color:#ecf1f8;font-size:15px;line-height:1.9}
+.subject{color:#f2d178;font-size:18px;font-weight:700}
+.subtext{color:#e7ecf4;line-height:1.8;font-size:15px}
+.name-label{color:var(--gold);font-weight:800;font-size:18px;margin:18px 0 10px}
+.name-input{width:min(100%,340px);background:#4d5e7f;border:2px solid #d8b54a;color:white;font-size:18px;border-radius:16px;padding:18px;outline:none;text-align:center}
+.name-input::placeholder{color:#cdd5e3}
+.main-btn{display:inline-block;margin-top:24px;background:linear-gradient(90deg,#f4c515,#f0a006);border:none;color:white;font-weight:800;font-size:19px;padding:18px 34px;border-radius:20px;box-shadow:0 10px 18px rgba(240,160,6,.28);cursor:pointer;min-width:250px}
+.link-btn{display:inline-block;margin-top:16px;color:#dbc889;text-decoration:underline;cursor:pointer;font-size:15px}
+.floating{position:absolute;pointer-events:none;animation:floaty 3.8s ease-in-out infinite}
+.lantern{font-size:40px;filter:drop-shadow(0 0 12px rgba(255,115,0,.25))}
+.f1{top:18px;left:3%}.f2{top:38px;left:22%;animation-delay:.8s}.f3{top:62px;right:20%;animation-delay:1.2s}.f4{top:22px;right:3%;animation-delay:1.7s}
+.s1{top:170px;left:7%;color:#f7de7d}.s2{top:160px;right:8%;color:#f7de7d}
+.dot-float{width:20px;height:20px;border-radius:50%;background:#c6cbd6aa;bottom:120px;left:50%;transform:translateX(-50%);animation:floaty 3s ease-in-out infinite}
+.quiz-top{width:min(100%,700px);margin:0 auto 14px;display:flex;justify-content:space-between;align-items:center;font-weight:800}
+.points{color:#53d164;font-size:18px}.qcount{color:#ffd25a;font-size:18px}
+.progress{width:min(100%,700px);height:14px;margin:0 auto 20px;background:#7c87995e;border-radius:999px;overflow:hidden}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#f2c63c,#f1ae10);border-radius:999px;transition:width .35s ease}
+.question-card{width:min(100%,700px);margin:0 auto;background:linear-gradient(135deg, rgba(58,79,110,.96), rgba(41,61,93,.96));border:1px solid rgba(193,171,93,.55);border-radius:28px;padding:18px 24px 22px;box-shadow:0 18px 34px rgba(0,0,0,.22)}
+.q-icon{font-size:72px;margin-bottom:8px;line-height:1}
+.q-text{font-size:clamp(23px,3vw,28px);font-weight:800;line-height:1.7;margin:8px 0 14px;color:#fff}
+.compass{font-size:170px;line-height:1;margin:12px 0 16px;filter:drop-shadow(0 0 10px rgba(0,0,0,.15))}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:min(100%,640px);margin:0 auto}
+.option{border:none;cursor:pointer;background:linear-gradient(90deg,var(--purple1),var(--purple2));color:white;font-weight:800;font-size:18px;min-height:62px;border-radius:16px;transition:transform .08s ease, filter .2s ease, opacity .2s ease;padding:12px 10px}
+.option:hover{filter:brightness(1.04)}.option:active{transform:scale(.98)}.option.correct{background:linear-gradient(90deg,#13c08c,#20b777)}.option.wrong{background:linear-gradient(90deg,#db5b70,#cb314c)}.option.dim{opacity:.55}
+.feedback{min-height:38px;font-weight:800;font-size:18px;margin:14px 0 10px}
+.feedback.ok{color:#56df7c}.feedback.no{color:#ff9baa}
+.next-btn{width:100%;border:none;background:linear-gradient(90deg,var(--green2),var(--green1));color:white;font-size:18px;font-weight:800;border-radius:16px;min-height:60px;cursor:pointer}
+.result-title{color:#ffd25a;font-weight:800;font-size:clamp(30px,4vw,48px);margin:0 0 16px}
+.cert-wrap{width:min(100%,760px);text-align:center}
+.certificate{width:min(100%,420px);margin:0 auto 18px;background:#f7efc6;color:#88521b;border:8px solid #d2ad39;border-radius:4px;padding:18px 20px 14px;box-shadow:0 15px 35px rgba(0,0,0,.18)}
+.cup{font-size:56px;line-height:1}.cert-main{font-size:22px;font-weight:800;margin:8px 0 4px}.cert-line{width:120px;height:6px;background:#e1b72f;border-radius:20px;margin:10px auto 18px}
+.cert-small{font-size:14px;color:#c08739;line-height:1.8}.cert-school{font-size:23px;font-weight:800;line-height:1.4}.student-name{font-size:31px;font-weight:800;line-height:1.35;margin:10px 0}.task-title{font-size:19px;font-weight:800;line-height:1.5}
+.score-box{background:#efe1a3;border-radius:16px;padding:14px 12px;margin:16px 0 14px}.score-big{font-size:44px;font-weight:900;line-height:1}.score-per{font-size:18px;color:#cf8d1d;margin-top:4px}
+.cert-footer{display:flex;justify-content:space-between;align-items:flex-end;font-size:12px;color:#c08739;margin-top:8px}.cert-icons{font-size:30px}
+.result-actions{width:min(100%,420px);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.action-btn{border:none;min-height:56px;border-radius:16px;color:white;font-size:16px;font-weight:800;cursor:pointer}.btn-log{background:linear-gradient(90deg,#6b57ff,#b246ff)}.btn-retry{background:linear-gradient(90deg,#22c9c0,#16ad7d)}
+.log-header{width:min(100%,760px);display:flex;justify-content:space-between;align-items:center;margin:0 auto 18px}
+.back-btn{border:none;background:#5d7295;color:#e8edf5;font-size:17px;font-weight:700;border-radius:16px;min-width:140px;min-height:58px;cursor:pointer}
+.log-title{font-size:clamp(28px,4vw,50px);color:var(--gold);font-weight:900}
+.records{width:min(100%,760px);margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.record{background:linear-gradient(135deg, rgba(66,92,128,.92), rgba(53,73,110,.92));border:1px solid rgba(193,171,93,.55);border-radius:24px;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.rec-left{text-align:left;min-width:110px;color:#ffd25a}.rec-score{font-size:28px;font-weight:900;line-height:1}.rec-per{font-size:16px;color:#d7dfea;margin-top:8px}
+.rec-right{text-align:right;flex:1}.rec-name{font-size:22px;font-weight:900;display:flex;gap:8px;align-items:center;justify-content:flex-end}.rec-date{font-size:14px;color:#d7dfea;margin-top:8px}
+.empty{width:min(100%,760px);margin:10px auto 0;color:#d7dfea;font-size:18px}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@keyframes twinkle{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
+@media (max-width:640px){.options{grid-template-columns:1fr}.q-text{font-size:20px}.compass{font-size:140px}.record{padding:16px}.rec-name{font-size:20px}}
+
+.s1{animation-duration:1.7s}.s2{animation-duration:2.1s}
+.star-mini{position:absolute;color:#ffe27a;opacity:.75;animation:twinkle 1.8s infinite ease-in-out}
+.sm1{top:120px;left:12%;font-size:14px;animation-delay:.2s}
+.sm2{top:210px;left:18%;font-size:10px;animation-delay:.8s}
+.sm3{top:145px;right:14%;font-size:12px;animation-delay:1.1s}
+.sm4{top:240px;right:9%;font-size:16px;animation-delay:.4s}
+.sm5{top:320px;left:8%;font-size:11px;animation-delay:1.5s}
+.sm6{top:360px;right:12%;font-size:13px;animation-delay:.9s}
+.confetti{
+  position:fixed; top:-20px; width:10px; height:16px; opacity:.95; pointer-events:none;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  to{ transform:translateY(110vh) rotate(720deg); opacity:1; }
+}
+
+</style>
+</head>
+<body>
+<section id="homeScreen" class="screen active">
+  <div class="phone-wrap">
+    <div class="floating lantern f1">🏮</div><div class="floating lantern f2">🏮</div><div class="floating lantern f3">🏮</div><div class="floating lantern f4">🏮</div>
+    <div class="floating s1 small-star">✦</div><div class="floating s2 small-star">★</div>
+    
+    <div class="star-mini sm1">✦</div>
+    <div class="star-mini sm2">★</div>
+    <div class="star-mini sm3">✦</div>
+    <div class="star-mini sm4">★</div>
+    <div class="star-mini sm5">✦</div>
+    <div class="star-mini sm6">★</div>
+
+    <div class="moon">🌙</div>
+    <div class="title">خريطة الخير الرمضانية</div>
+    <div class="card"><div class="desc-title">🕌مهمة تعلم الاتجاهات🕌</div><div class="desc">تعلمي الاتجاهات الأصلية والفرعية من خلال رحلة رمضانية ممتعة!</div></div>
+    <div class="card"><div class="subject">📚 مادة الدراسات الاجتماعية</div><div class="subtext">إعداد المعلمة: شيخة الظاهري<br>مدرسة فاطمة بنت مبارك</div></div>
+    <div class="name-label">✏️ اكتبي اسمك الكامل:</div>
+    <input id="playerName" class="name-input" placeholder="الاسم الكامل هنا..." />
+    <br><button class="main-btn" onclick="startGame()">ابدئي المغامرة 🚀</button>
+    <div class="link-btn" onclick="openLog()">📜 عرض شهادات الإنجاز السابقة</div>
+    <div class="floating dot-float"></div>
+  </div>
+</section>
+
+<section id="quizScreen" class="screen">
+  <div class="phone-wrap">
+    <div class="quiz-top"><div id="pointsText" class="points">النقاط: 0</div><div id="countText" class="qcount">السؤال 1 من 8</div></div>
+    <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+    <div class="question-card">
+      <div id="qIcon" class="q-icon">🧭</div>
+      <div id="qText" class="q-text"></div>
+      <div class="compass">🧭</div>
+      <div id="optionsWrap" class="options"></div>
+      <div id="feedback" class="feedback"></div>
+      <button id="nextBtn" class="next-btn" style="display:none" onclick="nextQuestion()">السؤال التالي ←</button>
+    </div>
+    <div class="floating dot-float"></div>
+  </div>
+</section>
+
+<section id="resultScreen" class="screen">
+  <div class="cert-wrap">
+    <div class="result-title">🎉 أحسنت! أكملت المهمة</div>
+    <div class="certificate">
+      <div class="cup">🏆</div>
+      <div class="cert-main">شهادة إنجاز</div>
+      <div class="cert-line"></div>
+      <div class="cert-small">تشهد مدرسة</div>
+      <div class="cert-school">مدرسة فاطمة بنت مبارك</div>
+      <div class="cert-small">بأن الطالبة</div>
+      <div id="certName" class="student-name">—</div>
+      <div class="cert-small">قد أتمت بنجاح مهمة</div>
+      <div class="task-title">خريطة الخير الرمضانية</div>
+      <div class="score-box">
+        <div class="cert-small">الدرجة المحققة</div>
+        <div id="certScore" class="score-big">0/8</div>
+        <div id="certPercent" class="score-per">0%</div>
+      </div>
+      <div class="cert-footer"><div>المعلمة شيخة الظاهري</div><div id="certDate">—</div></div>
+      <div class="cert-icons">🕌 ✨ 🌙</div>
+    </div>
+    <div class="result-actions">
+      <button class="action-btn btn-log" onclick="openLog()">📜 عرض كل الشهادات</button>
+      <button class="action-btn btn-retry" onclick="retryGame()">🔄 أعيدي المحاولة</button>
+    </div>
+  </div>
+</section>
+
+<section id="logScreen" class="screen">
+  <div class="phone-wrap">
+    <div class="log-header"><button class="back-btn" onclick="goHome()">العودة ←</button><div class="log-title">📜 سجل الإنجازات</div></div>
+    <div id="recordsWrap" class="records"></div>
+    <div id="emptyState" class="empty" style="display:none">لا توجد شهادات محفوظة بعد.</div>
+  </div>
+</section>
+
+<script>
+const questions = [
+  {icon:"🧭", q:"ما هو الاتجاه الذي تشرق منه الشمس؟", options:["الغرب","الشرق","الجنوب","الشمال"], answer:1},
+  {icon:"🌅", q:"ما هو الاتجاه الذي تغرب منه الشمس وقت الإفطار؟", options:["الجنوب","الشمال","الشرق","الغرب"], answer:3},
+  {icon:"🕌", q:"الاتجاه الفرعي بين الشمال والشرق يسمى؟", options:["الشمال الشرقي","الشمال الغربي","الجنوب الغربي","الجنوب الشرقي"], answer:0},
+  {icon:"🏠", q:"الاتجاه الفرعي بين الجنوب والغرب يسمى؟", options:["الجنوب الشرقي","الشمال الشرقي","الشمال الغربي","الجنوب الغربي"], answer:3},
+  {icon:"⭐", q:"كم عدد الاتجاهات الأصلية؟", options:["4","2","8","6"], answer:0},
+  {icon:"🌟", q:"كم عدد الاتجاهات الفرعية؟", options:["3","2","5","4"], answer:3},
+  {icon:"🧭", q:"ما الاتجاه المقابل للشمال؟", options:["الغرب","الشرق","الشمال الشرقي","الجنوب"], answer:3},
+  {icon:"🕋", q:"الاتجاه الفرعي بين الشمال والغرب يسمى؟", options:["الشمال الشرقي","الشمال الغربي","الجنوب الشرقي","الجنوب الغربي"], answer:1}
+];
+let currentIndex=0, score=0, currentName="", answered=false;
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function startGame(){const name=document.getElementById('playerName').value.trim();if(!name){alert('اكتبي الاسم أولاً');return;}currentName=name;currentIndex=0;score=0;answered=false;showScreen('quizScreen');renderQuestion();}
+function renderQuestion(){
+  const q=questions[currentIndex];
+  document.getElementById('pointsText').textContent='النقاط: '+score;
+  document.getElementById('countText').textContent='السؤال '+(currentIndex+1)+' من '+questions.length;
+  document.getElementById('progressBar').style.width=((currentIndex)/(questions.length)*100)+'%';
+  document.getElementById('qIcon').textContent=q.icon;
+  document.getElementById('qText').textContent=q.q;
+  document.getElementById('feedback').textContent='';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('nextBtn').style.display='none';
+  answered=false;
+  const wrap=document.getElementById('optionsWrap');wrap.innerHTML='';
+  q.options.forEach((opt,idx)=>{const btn=document.createElement('button');btn.className='option';btn.textContent=opt;btn.onclick=()=>selectAnswer(idx);wrap.appendChild(btn);});
+}
+function selectAnswer(idx){
+  if(answered) return; answered=true;
+  const q=questions[currentIndex], buttons=[...document.querySelectorAll('.option')];
+  buttons.forEach((btn,i)=>{btn.classList.add('dim'); if(i===q.answer) btn.classList.add('correct'); if(i===idx && i!==q.answer) btn.classList.add('wrong');});
+  const feedback=document.getElementById('feedback');
+  if(idx===q.answer){score++;playCorrectSound();document.getElementById('pointsText').textContent='النقاط: '+score;feedback.textContent='✅ أحسنت! إجابة صحيحة';feedback.classList.add('ok');}
+  else{feedback.textContent='❌ إجابة غير صحيحة';feedback.classList.add('no');}
+  document.getElementById('nextBtn').style.display='block';
+}
+function nextQuestion(){currentIndex++; if(currentIndex<questions.length) renderQuestion(); else finishGame();}
+function finishGame(){
+  const percent=Math.round((score/questions.length)*100);
+  const now=new Date();
+  const dateText=now.toLocaleDateString('en-CA')+' - '+now.toLocaleTimeString('ar-EG',{hour:'numeric',minute:'2-digit'});
+  document.getElementById('certName').textContent=currentName;
+  document.getElementById('certScore').textContent=score+'/'+questions.length;
+  document.getElementById('certPercent').textContent=percent+'%';
+  document.getElementById('certDate').textContent=dateText;
+  saveRecord({name:currentName,score:score,total:questions.length,percent:percent,date:dateText});
+  showScreen('resultScreen'); playFinishSound(); launchConfetti(140);
+}
+function retryGame(){currentIndex=0;score=0;answered=false;showScreen('quizScreen');renderQuestion();}
+function goHome(){showScreen('homeScreen')}
+function saveRecord(record){const key='ramadanAchievements_v2';const existing=JSON.parse(localStorage.getItem(key)||'[]');existing.unshift(record);localStorage.setItem(key, JSON.stringify(existing.slice(0,50)));}
+function openLog(){
+  const key='ramadanAchievements_v2', existing=JSON.parse(localStorage.getItem(key)||'[]');
+  const wrap=document.getElementById('recordsWrap');wrap.innerHTML='';
+  document.getElementById('emptyState').style.display=existing.length?'none':'block';
+  existing.forEach(rec=>{const card=document.createElement('div');card.className='record';card.innerHTML='<div class="rec-right"><div class="rec-name">🏆 <span>'+escapeHtml(rec.name)+'</span></div><div class="rec-date">'+escapeHtml(rec.date)+'</div></div><div class="rec-left"><div class="rec-score">'+rec.score+'/'+rec.total+'</div><div class="rec-per">'+rec.percent+'%</div></div>';wrap.appendChild(card);});
+  showScreen('logScreen');
+}
+function escapeHtml(str){return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;')}
+document.getElementById('playerName').addEventListener('keydown',e=>{if(e.key==='Enter') startGame();});
+
+let audioCtx = null;
+function beep(freq=880, duration=0.14, type='sine', volume=0.05){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.value = volume;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.stop(audioCtx.currentTime + duration);
+  }catch(e){}
+}
+function playCorrectSound(){
+  beep(740,0.10,'triangle',0.06);
+  setTimeout(()=>beep(988,0.12,'triangle',0.06),90);
+}
+function playFinishSound(){
+  beep(784,0.12,'sine',0.05);
+  setTimeout(()=>beep(988,0.12,'sine',0.05),110);
+  setTimeout(()=>beep(1175,0.18,'sine',0.05),220);
+}
+function launchConfetti(count=120){
+  const colors=['#ffd54f','#ff6ec7','#7cf7ff','#8bff7a','#ffffff','#b46cff'];
+  for(let i=0;i<count;i++){
+    const c=document.createElement('div');
+    c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.transform='rotate('+(Math.random()*360)+'deg)';
+    c.style.animationDuration=(2.6+Math.random()*2.2)+'s';
+    c.style.width=(6+Math.random()*7)+'px';
+    c.style.height=(10+Math.random()*12)+'px';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+
+</script>
+</body>
+</html>
