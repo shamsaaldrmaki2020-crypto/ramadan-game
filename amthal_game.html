@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مسابقة الأمثال مع عشبة</title>
+<style>
+:root{
+  --gold:#f1d28a; --sky1:#8b6789; --sky2:#c98b68; --sky3:#f0b07d;
+  --panel:rgba(255,248,236,.92);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Tahoma,Arial,sans-serif; min-height:100vh; color:#3f2818; overflow-x:hidden;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255,255,255,.18), transparent 14%),
+    radial-gradient(circle at 75% 18%, rgba(255,255,255,.14), transparent 12%),
+    linear-gradient(180deg,var(--sky1) 0%, var(--sky2) 35%, var(--sky3) 65%, #bf804f 100%);
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; opacity:.82;
+  background:
+    linear-gradient(180deg, transparent 0 70%, #b97a49 71%, #9f6438 100%),
+    radial-gradient(circle at 10% 88%, #9a6036 0 17%, transparent 18%),
+    radial-gradient(circle at 40% 88%, #a96b3e 0 19%, transparent 20%),
+    radial-gradient(circle at 70% 90%, #8c5631 0 17%, transparent 18%),
+    radial-gradient(circle at 90% 88%, #7d4e2e 0 16%, transparent 17%);
+}
+.screen{display:none; min-height:100vh; align-items:center; justify-content:center; padding:18px 14px 30px; position:relative}
+.screen.active{display:flex}
+.wrap{width:min(100%, 900px); margin:auto; position:relative; z-index:2}
+.home-layout{display:flex; flex-direction:column; align-items:center; text-align:center}
+.title{font-size:clamp(34px,5.8vw,68px); line-height:1.12; margin:0 0 10px; font-weight:900; color:var(--gold); text-shadow:0 2px 0 rgba(98,58,27,.55),0 4px 12px rgba(255,235,197,.18)}
+.subtitle{display:inline-block; background:rgba(95,62,39,.86); color:#ffe9c8; padding:10px 18px; border-radius:18px; font-size:18px; font-weight:800; margin:4px 0 8px}
+.chip{display:inline-block; background:rgba(255,248,237,.8); color:#6a4727; border:1px solid rgba(120,80,45,.2); border-radius:16px; padding:8px 14px; font-weight:800; font-size:14px; margin-bottom:8px; box-shadow:0 8px 18px rgba(0,0,0,.08)}
+.card{width:min(100%,560px); background:var(--panel); border:1px solid rgba(130,88,50,.2); border-radius:28px; padding:18px; box-shadow:0 14px 28px rgba(68,38,16,.12); margin-top:14px}
+.card h3{margin:0 0 8px; color:#7b4e2a; font-size:21px}
+.card p{margin:0; line-height:1.95; font-size:16px}
+.hero{width:min(100%,320px); margin:18px auto 4px; position:relative; animation:floaty 4.2s ease-in-out infinite}
+.hero img{width:100%; display:block; filter:drop-shadow(0 18px 28px rgba(69,37,16,.22))}
+.badge{position:absolute; right:4px; bottom:22px; background:rgba(78,49,29,.92); color:#fce6bc; padding:8px 16px; border-radius:14px; font-weight:900; font-size:20px; box-shadow:0 10px 18px rgba(0,0,0,.14)}
+.name-label{margin-top:18px; font-size:21px; font-weight:900; color:#fff7ea; text-shadow:0 2px 0 rgba(83,50,25,.32)}
+.name-input{width:min(100%,360px); margin-top:10px; border:none; outline:none; font-size:18px; border-radius:18px; padding:18px 16px; background:rgba(255,251,244,.92); color:#56331c; text-align:center; box-shadow:0 8px 18px rgba(90,55,28,.12), inset 0 0 0 2px rgba(154,98,55,.2)}
+.main-btn{margin-top:20px; border:none; border-radius:18px; min-height:60px; min-width:260px; padding:0 26px; font-size:20px; font-weight:900; color:white; cursor:pointer; background:linear-gradient(90deg,#99643a,#c98843,#9a5f35); box-shadow:0 12px 20px rgba(102,63,29,.25)}
+.question-card{width:min(100%,720px); margin:auto; background:rgba(82,53,36,.82); color:#fffaf2; border-radius:30px; padding:22px; border:1px solid rgba(255,228,192,.24); box-shadow:0 20px 38px rgba(64,37,18,.22)}
+.q-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px}
+.pill{color:#235a25; background:rgba(255,243,221,.82); padding:8px 14px; border-radius:14px; font-weight:900}
+.count{color:#fff2d2; font-weight:900}
+.question-text{font-size:clamp(26px,3vw,34px); line-height:1.8; font-weight:900; margin:16px 0 18px; text-align:center}
+.options{display:grid; gap:14px}
+.option{border:none; min-height:62px; border-radius:18px; color:white; font-size:20px; font-weight:900; cursor:pointer; background:linear-gradient(90deg,#8f66ff,#c75dff); padding:12px 14px}
+.option.correct{background:linear-gradient(90deg,#27b565,#24cb87)}
+.option.wrong{background:linear-gradient(90deg,#ca5d64,#d33555)}
+.option.dim{opacity:.58}
+.feedback{min-height:38px; font-weight:900; font-size:20px; margin:14px 0 10px}
+.next-btn{width:100%; border:none; background:linear-gradient(90deg,#2ec58d,#1ea56d); min-height:60px; border-radius:18px; color:white; font-size:18px; font-weight:900; cursor:pointer}
+.result-title{text-align:center; color:#fff6df; text-shadow:0 3px 0 rgba(102,62,31,.34); font-size:clamp(32px,5vw,52px); font-weight:900; margin:0 0 16px}
+.certificate{width:min(100%,430px); margin:0 auto 18px; background:#f7ecd0; border:8px solid #d1a343; color:#89511a; border-radius:4px; padding:18px 20px 14px; box-shadow:0 15px 35px rgba(0,0,0,.16)}
+.cup{font-size:56px}.cert-main{font-size:23px; font-weight:900; margin:8px 0 4px}.cert-line{width:130px; height:6px; border-radius:30px; background:#e0b538; margin:10px auto 18px}
+.cert-small{font-size:14px; color:#c18639; line-height:1.8}.cert-school{font-size:24px; font-weight:900; line-height:1.45}.student-name{font-size:31px; font-weight:900; line-height:1.35; margin:10px 0}.task-title{font-size:22px; font-weight:900; line-height:1.5}
+.score-box{background:#efdf9f; border-radius:16px; padding:14px 12px; margin:16px 0 14px}.score-big{font-size:34px; font-weight:900; line-height:1}.score-per{font-size:18px; color:#cb891b; margin-top:4px}
+.cert-footer{display:flex; justify-content:space-between; align-items:flex-end; color:#c08739; font-size:12px; margin-top:8px}
+.actions{width:min(100%,430px); margin:auto; display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.action-btn{border:none; min-height:56px; border-radius:16px; color:white; font-size:16px; font-weight:900; cursor:pointer}
+.btn-log{background:linear-gradient(90deg,#6b57ff,#b246ff)} .btn-retry{background:linear-gradient(90deg,#22c9c0,#16ad7d)}
+.log-header{width:min(100%,760px); margin:0 auto 18px; display:flex; justify-content:space-between; align-items:center}
+.back-btn{border:none; background:#796150; color:#fff6ee; font-size:17px; font-weight:800; border-radius:16px; min-width:140px; min-height:58px; cursor:pointer}
+.log-title{font-size:clamp(30px,4vw,50px); color:#fff0cb; text-shadow:0 3px 0 rgba(90,53,27,.24); font-weight:900}
+.records{width:min(100%,760px); margin:0 auto; display:flex; flex-direction:column; gap:18px}
+.record{background:rgba(88,59,40,.78); border:1px solid rgba(235,205,156,.26); border-radius:24px; padding:18px 24px; display:flex; justify-content:space-between; align-items:center; gap:14px; color:#fff8ef}
+.rec-left{text-align:left; min-width:110px; color:#ffe08f} .rec-score{font-size:28px; font-weight:900; line-height:1} .rec-per{font-size:16px; color:#eadfce; margin-top:8px}
+.rec-right{text-align:right; flex:1} .rec-name{font-size:22px; font-weight:900; display:flex; gap:8px; align-items:center; justify-content:flex-end} .rec-date{font-size:14px; color:#e7ddcf; margin-top:8px}
+.empty{width:min(100%,760px); margin:10px auto 0; color:#fff1df; font-size:18px}
+.sparkles{display:flex; justify-content:center; gap:10px; margin-bottom:8px}.sparkles span{color:#f7dd9c; font-size:20px}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+</style>
+</head>
+<body>
+
+<section id="homeScreen" class="screen active">
+  <div class="wrap">
+    <div class="home-layout">
+      <div class="chip">منزل الهوية الوطنية • مدرسة فاطمة بنت مبارك</div>
+      <div class="title">مسابقة الأمثال مع عشبة</div>
+      <div class="subtitle">لعبة إكمال المثل باختيار الإجابة الصحيحة</div>
+      <div class="hero">
+        <img src="https://i.imgur.com/3yaf6XH.png" alt="عشبة">
+        <div class="badge">عشبة</div>
+      </div>
+      <div class="card"><h3>📖 مهمة إكمال الأمثال الشعبية</h3><p>اختاري الكلمة أو العبارة الصحيحة لإكمال المثل الشعبي الإماراتي.</p></div>
+      <div class="card"><h3>📚 مادة الدراسات الاجتماعية</h3><p>إعداد المعلمة: شيخة الظاهري<br>مدرسة فاطمة بنت مبارك</p></div>
+      <div class="name-label">✏️ اكتبي اسمك الكامل:</div>
+      <input id="playerName" class="name-input" placeholder="الاسم الكامل هنا...">
+      <button id="startBtn" class="main-btn">ابدئي المغامرة 🚀</button>
+    </div>
+  </div>
+</section>
+
+<section id="quizScreen" class="screen">
+  <div class="wrap">
+    <div class="question-card">
+      <div class="q-top">
+        <div id="scorePill" class="pill">النقاط: 0</div>
+        <div id="countText" class="count">السؤال 1 من 6</div>
+      </div>
+      <div class="sparkles"><span>✦</span><span>✦</span><span>✦</span></div>
+      <div id="questionText" class="question-text"></div>
+      <div id="optionsWrap" class="options"></div>
+      <div id="feedback" class="feedback"></div>
+      <button id="nextBtn" class="next-btn" style="display:none">السؤال التالي ←</button>
+    </div>
+  </div>
+</section>
+
+<section id="resultScreen" class="screen">
+  <div class="wrap">
+    <div class="result-title">🎉 أحسنتِ! أنهيتِ اللعبة</div>
+    <div class="certificate">
+      <div class="cup">🏆</div>
+      <div class="cert-main">شهادة إنجاز</div>
+      <div class="cert-line"></div>
+      <div class="cert-small">تشهد مدرسة</div>
+      <div class="cert-school">مدرسة فاطمة بنت مبارك</div>
+      <div class="cert-small">بأن الطالبة</div>
+      <div id="certName" class="student-name">—</div>
+      <div class="cert-small">قد أتمت بنجاح مهمة</div>
+      <div class="task-title">إكمال الأمثال الشعبية الإماراتية</div>
+      <div class="score-box">
+        <div class="cert-small">النتيجة المحققة</div>
+        <div id="certScore" class="score-big">0 / 6</div>
+        <div id="certPercent" class="score-per">0%</div>
+      </div>
+      <div class="cert-footer"><div>المعلمة شيخة الظاهري</div><div id="certDate">—</div></div>
+    </div>
+    <div class="actions">
+      <button class="action-btn btn-log" onclick="openLog()">📜 عرض النتائج</button>
+      <button class="action-btn btn-retry" onclick="restartGame()">🔄 إعادة اللعب</button>
+    </div>
+  </div>
+</section>
+
+<section id="logScreen" class="screen">
+  <div class="wrap">
+    <div class="log-header">
+      <button class="back-btn" onclick="goHome()">العودة ←</button>
+      <div class="log-title">📜 سجل النتائج</div>
+    </div>
+    <div id="recordsWrap" class="records"></div>
+    <div id="emptyState" class="empty" style="display:none">لا توجد نتائج محفوظة بعد.</div>
+  </div>
+</section>
+
+<script>
+const questions = [
+  { q: "الجار قبل ____", options: ["الدار","الطريق","السوق"], correct: 0 },
+  { q: "اللي ما يعرف الصقر ____", options: ["يشويه","يطعمه","يبيعه"], correct: 0 },
+  { q: "إذا دخل القدر ____", options: ["يضيق الصدر","يعمي البصر","يغمض العين"], correct: 1 },
+  { q: "إذا فات الفوت ____", options: ["ما ينفع الصوت","يضيع الوقت","يكثر اللوم"], correct: 0 },
+  { q: "الخال خلي، والعم ____", options: ["ولي","صديقي","سندي"], correct: 0 },
+  { q: "إذا كنت خياط بصير ____", options: ["عليك بالخيط القصير","عليك بالقماش الطويل","عليك بالإبرة الكبيرة"], correct: 0 }
+];
+
+let currentIndex = 0;
+let score = 0;
+let currentName = "مشاركة";
+let answered = false;
+let audioCtx = null;
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function tone(freq, duration){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    gain.gain.value = 0.05;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.stop(audioCtx.currentTime + duration);
+  }catch(e){}
+}
+function playCorrect(){ tone(700, 0.12); setTimeout(()=>tone(980,0.14), 100); setTimeout(()=>tone(1240,0.18), 230); }
+function playWrong(){ tone(220, 0.18); setTimeout(()=>tone(160,0.18), 120); }
+
+function startGame(){
+  currentName = document.getElementById('playerName').value.trim() || 'مشاركة';
+  currentIndex = 0;
+  score = 0;
+  answered = false;
+  showScreen('quizScreen');
+  renderQuestion();
+}
+function renderQuestion(){
+  const q = questions[currentIndex];
+  document.getElementById('scorePill').textContent = 'النقاط: ' + score;
+  document.getElementById('countText').textContent = 'السؤال ' + (currentIndex + 1) + ' من ' + questions.length;
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  answered = false;
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt;
+    btn.onclick = () => chooseAnswer(i);
+    wrap.appendChild(btn);
+  });
+}
+function chooseAnswer(i){
+  if(answered) return;
+  answered = true;
+  const q = questions[currentIndex];
+  const buttons = [...document.querySelectorAll('.option')];
+  buttons.forEach((b, idx) => {
+    b.classList.add('dim');
+    if(idx === q.correct) b.classList.add('correct');
+    if(idx === i && idx !== q.correct) b.classList.add('wrong');
+  });
+  const feedback = document.getElementById('feedback');
+  if(i === q.correct){
+    score++;
+    playCorrect();
+    feedback.textContent = '👏 إجابة صحيحة';
+    feedback.style.color = '#8df7a5';
+    document.getElementById('scorePill').textContent = 'النقاط: ' + score;
+  }else{
+    playWrong();
+    feedback.textContent = '❌ إجابة غير صحيحة';
+    feedback.style.color = '#ffc2c7';
+  }
+  document.getElementById('nextBtn').style.display = 'block';
+}
+function nextQuestion(){
+  currentIndex++;
+  if(currentIndex < questions.length){
+    renderQuestion();
+  }else{
+    finishGame();
+  }
+}
+function finishGame(){
+  const percent = Math.round((score / questions.length) * 100);
+  const now = new Date();
+  document.getElementById('certName').textContent = currentName;
+  document.getElementById('certScore').textContent = score + ' / ' + questions.length;
+  document.getElementById('certPercent').textContent = percent + '%';
+  document.getElementById('certDate').textContent = now.toLocaleDateString('en-CA');
+  const rec = { name: currentName, score: score, total: questions.length, percent: percent, date: now.toLocaleDateString('en-CA') };
+  const key = 'amthalResults_v1';
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  arr.unshift(rec);
+  localStorage.setItem(key, JSON.stringify(arr.slice(0,50)));
+  showScreen('resultScreen');
+}
+function openLog(){
+  const key = 'amthalResults_v1';
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  const wrap = document.getElementById('recordsWrap');
+  wrap.innerHTML = '';
+  document.getElementById('emptyState').style.display = arr.length ? 'none' : 'block';
+  arr.forEach(rec => {
+    const div = document.createElement('div');
+    div.className = 'record';
+    div.innerHTML = '<div class="rec-right"><div class="rec-name">🏆 <span>' + escapeHtml(rec.name) + '</span></div><div class="rec-date">' + rec.date + '</div></div><div class="rec-left"><div class="rec-score">' + rec.score + '/' + rec.total + '</div><div class="rec-per">' + rec.percent + '%</div></div>';
+    wrap.appendChild(div);
+  });
+  showScreen('logScreen');
+}
+function restartGame(){ showScreen('homeScreen'); }
+function goHome(){ showScreen('homeScreen'); }
+function escapeHtml(str){
+  return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+}
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+document.getElementById('playerName').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') startGame();
+});
+</script>
+</body>
+</html>
